@@ -396,7 +396,7 @@
         .slider-wrapper.shape-circle { border-radius: 50%; aspect-ratio: 1/1; }
         .slider-wrapper.shape-square { border-radius: 0; aspect-ratio: 1/1; }
         .slider-wrapper.shape-pill { border-radius: 50px; }
-        .slider-wrapper.shape-diamond {
+        .slider-wrapper.shape-diamond { 
             transform: rotate(45deg) scale(0.7);
             border-radius: 10px;
         }
@@ -862,10 +862,7 @@
                 <div class="toggle-switch active" id="captionToggle" onclick="toggleSetting('caption')"></div>
             </div>
 
-            <div class="toggle-setting">
-                <span>🔄 التشغيل التلقائي</span>
-                <div class="toggle-switch" id="autoplayToggle" onclick="toggleSetting('autoplay')"></div>
-            </div>
+            <!-- Autoplay toggle hidden -->
 
             <div class="toggle-setting">
                 <span>🔍 تكبير عند المرور</span>
@@ -885,9 +882,7 @@
         <div class="slider-wrapper size-medium ratio-16-9 shape-rounded" id="sliderWrapper">
             <div class="image-counter" id="imageCounter">0 / 0</div>
 
-            <button class="autoplay-toggle" id="autoplayBtn" onclick="toggleAutoplay()">
-                ▶️ تشغيل تلقائي
-            </button>
+            <!-- Autoplay button hidden -->
 
             <div class="slider-track" id="sliderTrack">
                 <div class="empty-state" style="min-width: 100%; display: flex; align-items: center; justify-content: center;">
