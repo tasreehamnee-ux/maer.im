@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>معرض الصور الديناميكي - Imgur</title>
+    <title>معرض الصور الديناميكي - تضبيط الحجم والشكل</title>
     <style>
         * {
             margin: 0;
@@ -45,8 +45,8 @@
         .admin-panel {
             position: fixed;
             top: 0;
-            left: -480px;
-            width: 480px;
+            left: -450px;
+            width: 450px;
             height: 100vh;
             background: #16213e;
             z-index: 1000;
@@ -77,7 +77,6 @@
             transition: all 0.3s ease;
             margin-bottom: 20px;
             background: #0f3460;
-            position: relative;
         }
 
         .upload-zone:hover {
@@ -103,45 +102,6 @@
 
         .upload-zone input[type="file"] {
             display: none;
-        }
-
-        /* شريط التقدم */
-        .progress-bar {
-            width: 100%;
-            height: 6px;
-            background: #0f3460;
-            border-radius: 3px;
-            margin-top: 10px;
-            overflow: hidden;
-            display: none;
-        }
-
-        .progress-bar.active {
-            display: block;
-        }
-
-        .progress-fill {
-            height: 100%;
-            background: #e94560;
-            width: 0%;
-            transition: width 0.3s ease;
-            border-radius: 3px;
-        }
-
-        /* حالة الرفع */
-        .upload-status {
-            margin-top: 10px;
-            font-size: 13px;
-            color: #4CAF50;
-            display: none;
-        }
-
-        .upload-status.show {
-            display: block;
-        }
-
-        .upload-status.error {
-            color: #f44336;
         }
 
         /* قائمة الصور المرفوعة */
@@ -186,11 +146,6 @@
             border-radius: 5px;
             cursor: pointer;
             font-size: 12px;
-        }
-
-        .image-item .delete-btn:disabled {
-            background: #666;
-            cursor: not-allowed;
         }
 
         /* ===== إعدادات الحجم والشكل ===== */
@@ -266,6 +221,7 @@
         .shape-btn[data-shape="pill"] .shape-preview { border-radius: 50px; }
         .shape-btn[data-shape="diamond"] .shape-preview { transform: rotate(45deg) scale(0.7); }
         .shape-btn[data-shape="hexagon"] .shape-preview { clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%); }
+        .shape-btn[data-shape="triangle"] .shape-preview { clip-path: polygon(50% 0%, 0% 100%, 100% 100%); }
         .shape-btn[data-shape="leaf"] .shape-preview { border-radius: 0 50% 0 50%; }
 
         /* أزرار نسبة العرض */
@@ -315,7 +271,7 @@
         /* أزرار حجم العرض */
         .size-options {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
+            grid-template-columns: repeat(3, 1fr);
             gap: 10px;
         }
 
@@ -328,7 +284,7 @@
             cursor: pointer;
             font-size: 12px;
             text-align: center;
-            transition: all 0.3s ease;
+            transition: all 0.3 ease
         }
 
         .size-btn:hover {
@@ -396,7 +352,7 @@
         .slider-wrapper.shape-circle { border-radius: 50%; aspect-ratio: 1/1; }
         .slider-wrapper.shape-square { border-radius: 0; aspect-ratio: 1/1; }
         .slider-wrapper.shape-pill { border-radius: 50px; }
-        .slider-wrapper.shape-diamond { 
+        .slider-wrapper.shape-diamond {
             transform: rotate(45deg) scale(0.7);
             border-radius: 10px;
         }
@@ -435,6 +391,7 @@
             transition: all 0.5s ease;
         }
 
+        /* تأثيرات hover على الصورة */
         .slide:hover img {
             transform: scale(1.05);
         }
@@ -566,6 +523,20 @@
             background: rgba(233, 69, 96, 0.8);
         }
 
+        /* Responsive */
+        @media (max-width: 768px) {
+            .admin-panel {
+                width: 100%;
+                left: -100%;
+            }
+            .slider-wrapper {
+                width: 95% !important;
+            }
+            .shape-options, .ratio-options {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
         /* إعدادات إضافية */
         .extra-settings {
             margin-top: 20px;
@@ -622,125 +593,26 @@
         .toggle-switch.active::after {
             transform: translateX(-24px);
         }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .admin-panel {
-                width: 100%;
-                left: -100%;
-            }
-            .slider-wrapper {
-                width: 95% !important;
-            }
-            .shape-options, .ratio-options {
-                grid-template-columns: repeat(4, 1fr);
-            }
-        }
-
-        /* مؤشر التحميل */
-        .loading-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0,0,0,0.8);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 2000;
-            flex-direction: column;
-        }
-
-        .loading-overlay.hidden {
-            display: none;
-        }
-
-        .spinner {
-            width: 50px;
-            height: 50px;
-            border: 4px solid #0f3460;
-            border-top-color: #e94560;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        .loading-text {
-            margin-top: 15px;
-            color: #fff;
-            font-size: 14px;
-        }
-
-        /* معلومات التخزين */
-        .storage-info {
-            background: #0f3460;
-            padding: 15px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            border: 1px solid #4CAF50;
-        }
-
-        .storage-info h4 {
-            color: #4CAF50;
-            margin-bottom: 8px;
-            font-size: 14px;
-        }
-
-        .storage-info p {
-            color: #ccc;
-            font-size: 12px;
-            line-height: 1.6;
-        }
-
-        .storage-info .status {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            margin-top: 8px;
-            color: #4CAF50;
-            font-size: 13px;
-        }
     </style>
 <base target="_blank">
 </head>
 <body>
 
-    <!-- مؤشر التحميل -->
-    <div class="loading-overlay hidden" id="loadingOverlay">
-        <div class="spinner"></div>
-        <div class="loading-text" id="loadingText">جاري التحميل...</div>
-    </div>
-
-    <!-- No admin panel for public view -->
+    <!-- زر فتح لوحة التحكم -->
+    <button class="admin-toggle" onclick="toggleAdminPanel()">
+        ⚙️ لوحة التحكم
+    </button>
 
     <!-- لوحة التحكم المخفية -->
-    <div class="admin-panel" id="adminPanel" style="display:none !important;">
+    <div class="admin-panel" id="adminPanel">
         <h2>🖼️ إدارة الصور</h2>
-
-        <!-- معلومات التخزين -->
-        <div class="storage-info">
-            <h4>☁️ التخزين السحابي - Imgur</h4>
-            <p>الصور تُرفع تلقائياً إلى Imgur وتُحفظ دائماً. لا يحتاج حساب أو إعدادات.</p>
-            <div class="status">
-                <span>🟢</span>
-                <span>متصل - جاهز للرفع</span>
-            </div>
-        </div>
 
         <!-- منطقة الرفع -->
         <div class="upload-zone" id="uploadZone" onclick="document.getElementById('fileInput').click()">
             <span>📤</span>
             <p>اضغط هنا أو اسحب الصور لرفعها</p>
-            <p style="font-size: 12px; margin-top: 5px;">يدعم: JPG, PNG, GIF, WEBP - حتى 10 ميجا</p>
+            <p style="font-size: 12px; margin-top: 5px;">يدعم: JPG, PNG, GIF, WEBP</p>
             <input type="file" id="fileInput" multiple accept="image/*" onchange="handleFiles(this.files)">
-            <div class="progress-bar" id="progressBar">
-                <div class="progress-fill" id="progressFill"></div>
-            </div>
-            <div class="upload-status" id="uploadStatus"></div>
         </div>
 
         <!-- قائمة الصور -->
@@ -845,6 +717,7 @@
                     </div>
                 </div>
 
+                <!-- شريط تمرير مخصص -->
                 <div class="custom-size-slider">
                     <label style="font-size: 12px; color: #888; margin-bottom: 5px;">تعديل يدوي للحجم</label>
                     <input type="range" id="customSizeRange" min="20" max="100" value="75" oninput="setCustomSize(this.value)">
@@ -862,11 +735,19 @@
                 <div class="toggle-switch active" id="captionToggle" onclick="toggleSetting('caption')"></div>
             </div>
 
-            <!-- Autoplay toggle hidden -->
+            <div class="toggle-setting">
+                <span>🔄 التشغيل التلقائي</span>
+                <div class="toggle-switch" id="autoplayToggle" onclick="toggleSetting('autoplay')"></div>
+            </div>
 
             <div class="toggle-setting">
                 <span>🔍 تكبير عند المرور</span>
                 <div class="toggle-switch active" id="zoomToggle" onclick="toggleSetting('zoom')"></div>
+            </div>
+
+            <div class="toggle-setting">
+                <span>🎭 تأثير الانتقال</span>
+                <div class="toggle-switch active" id="effectToggle" onclick="toggleSetting('effect')"></div>
             </div>
 
             <div class="setting-group" style="margin-top: 15px;">
@@ -882,14 +763,15 @@
         <div class="slider-wrapper size-medium ratio-16-9 shape-rounded" id="sliderWrapper">
             <div class="image-counter" id="imageCounter">0 / 0</div>
 
-            <!-- Autoplay button hidden -->
+            <button class="autoplay-toggle" id="autoplayBtn" onclick="toggleAutoplay()">
+                ▶️ تشغيل تلقائي
+            </button>
 
             <div class="slider-track" id="sliderTrack">
                 <div class="empty-state" style="min-width: 100%; display: flex; align-items: center; justify-content: center;">
                     <div>
                         <h2>📷 لا توجد صور</h2>
                         <p>افتح لوحة التحكم لإضافة صور جديدة</p>
-                        <p style="font-size: 12px; margin-top: 10px; color: #888;">الصور تُحفظ تلقائياً على السحابة</p>
                     </div>
                 </div>
             </div>
@@ -911,96 +793,12 @@
         let currentRatio = '16:9';
         let currentSize = 'medium';
         let customSizeValue = 75;
-
         let settings = {
             speed: 3000,
             showCaption: true,
-            zoomOnHover: true
+            zoomOnHover: true,
+            transitionEffect: true
         };
-
-        // ===== Imgur API Client ID (مجاني وعام) =====
-        const IMGUR_CLIENT_ID = '546c25a59c58ad7';
-
-        // ===== مؤشر التحميل =====
-        function showLoading(text) {
-            document.getElementById('loadingText').textContent = text;
-            document.getElementById('loadingOverlay').classList.remove('hidden');
-        }
-
-        function hideLoading() {
-            document.getElementById('loadingOverlay').classList.add('hidden');
-        }
-
-        // ===== رفع الصورة إلى Imgur =====
-        async function uploadToImgur(file) {
-            showLoading('جاري رفع الصورة إلى السحابة...');
-
-            try {
-                const formData = new FormData();
-                formData.append('image', file);
-
-                const response = await fetch('https://api.imgur.com/3/image', {
-                    method: 'POST',
-                    headers: {
-                        'Authorization': 'Client-ID ' + IMGUR_CLIENT_ID
-                    },
-                    body: formData
-                });
-
-                const data = await response.json();
-
-                if (data.success) {
-                    hideLoading();
-                    return {
-                        id: data.data.id,
-                        url: data.data.link,
-                        deleteHash: data.data.deletehash,
-                        name: file.name
-                    };
-                } else {
-                    throw new Error(data.data.error);
-                }
-            } catch (error) {
-                hideLoading();
-                console.error('Error uploading to Imgur:', error);
-
-                // إذا فشل Imgur، نستخدم الرابط المحلي
-                return await uploadLocal(file);
-            }
-        }
-
-        // ===== رفع محلي (احتياطي) =====
-        async function uploadLocal(file) {
-            return new Promise((resolve) => {
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    resolve({
-                        id: 'local_' + Date.now(),
-                        url: e.target.result,
-                        deleteHash: null,
-                        name: file.name,
-                        isLocal: true
-                    });
-                };
-                reader.readAsDataURL(file);
-            });
-        }
-
-        // ===== حذف صورة من Imgur =====
-        async function deleteFromImgur(deleteHash) {
-            if (!deleteHash) return;
-
-            try {
-                await fetch('https://api.imgur.com/3/image/' + deleteHash, {
-                    method: 'DELETE',
-                    headers: {
-                        'Authorization': 'Client-ID ' + IMGUR_CLIENT_ID
-                    }
-                });
-            } catch (error) {
-                console.error('Error deleting from Imgur:', error);
-            }
-        }
 
         // ===== فتح/إغلاق لوحة التحكم =====
         function toggleAdminPanel() {
@@ -1015,6 +813,7 @@
             updateSliderAppearance();
         }
 
+        // ===== إعدادات النسبة =====
         function setRatio(ratio) {
             currentRatio = ratio;
             document.querySelectorAll('.ratio-btn').forEach(btn => btn.classList.remove('active'));
@@ -1022,11 +821,13 @@
             updateSliderAppearance();
         }
 
+        // ===== إعدادات الحجم =====
         function setSize(size) {
             currentSize = size;
             document.querySelectorAll('.size-btn').forEach(btn => btn.classList.remove('active'));
             document.querySelector(`.size-btn[data-size="${size}"]`).classList.add('active');
 
+            // تحديث شريط التمرير
             const sizes = { small: 50, medium: 75, large: 90, full: 100 };
             document.getElementById('customSizeRange').value = sizes[size];
             document.getElementById('sizeValueDisplay').textContent = sizes[size] + '%';
@@ -1038,24 +839,40 @@
         function setCustomSize(value) {
             customSizeValue = value;
             document.getElementById('sizeValueDisplay').textContent = value + '%';
+
+            // إزالة active من الأزرار
             document.querySelectorAll('.size-btn').forEach(btn => btn.classList.remove('active'));
 
             const wrapper = document.getElementById('sliderWrapper');
             wrapper.style.width = value + '%';
+
+            // إزالة classes الحجم الأصلية
             wrapper.classList.remove('size-small', 'size-medium', 'size-large', 'size-full');
         }
 
+        // ===== تحديث مظهر السلايدر =====
         function updateSliderAppearance() {
             const wrapper = document.getElementById('sliderWrapper');
+
+            // إزالة كل classes القديمة
             wrapper.className = 'slider-wrapper';
+
+            // إضافة الشكل
             wrapper.classList.add(`shape-${currentShape}`);
+
+            // إضافة النسبة
             wrapper.classList.add(`ratio-${currentRatio.replace(':', '-')}`);
 
+            // إضافة الحجم
             if (customSizeValue === 75) {
                 wrapper.classList.add(`size-${currentSize}`);
-                wrapper.style.width = '';
             } else {
                 wrapper.style.width = customSizeValue + '%';
+            }
+
+            // إزالة style inline إذا كان الحجم من الأزرار
+            if (customSizeValue === 75) {
+                wrapper.style.width = '';
             }
         }
 
@@ -1070,12 +887,18 @@
                     updateSlider();
                     break;
                 case 'autoplay':
-                    if (toggle.classList.contains('active')) startAutoplay();
-                    else stopAutoplay();
+                    if (toggle.classList.contains('active')) {
+                        startAutoplay();
+                    } else {
+                        stopAutoplay();
+                    }
                     break;
                 case 'zoom':
                     settings.zoomOnHover = toggle.classList.contains('active');
                     updateZoomEffect();
+                    break;
+                case 'effect':
+                    settings.transitionEffect = toggle.classList.contains('active');
                     break;
             }
         }
@@ -1091,7 +914,11 @@
             const value = document.getElementById('speedRange').value;
             settings.speed = value * 1000;
             document.getElementById('speedDisplay').textContent = value + ' ثواني';
-            if (isAutoplay) { stopAutoplay(); startAutoplay(); }
+
+            if (isAutoplay) {
+                stopAutoplay();
+                startAutoplay();
+            }
         }
 
         // ===== رفع الصور =====
@@ -1112,100 +939,33 @@
             handleFiles(e.dataTransfer.files);
         });
 
-        async function handleFiles(files) {
-            const progressBar = document.getElementById('progressBar');
-            const progressFill = document.getElementById('progressFill');
-            const uploadStatus = document.getElementById('uploadStatus');
+        function handleFiles(files) {
+            Array.from(files).forEach(file => {
+                if (!file.type.startsWith('image/')) return;
 
-            progressBar.classList.add('active');
-            uploadStatus.className = 'upload-status';
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    addImage(e.target.result, file.name);
+                };
+                reader.readAsDataURL(file);
+            });
+        }
 
-            const totalFiles = files.length;
-            let uploaded = 0;
-            let successCount = 0;
-            let failCount = 0;
-
-            for (const file of Array.from(files)) {
-                if (!file.type.startsWith('image/')) continue;
-
-                progressFill.style.width = ((uploaded / totalFiles) * 100) + '%';
-
-                const result = await uploadToImgur(file);
-
-                if (result) {
-                    images.unshift({
-                        id: result.id,
-                        src: result.url,
-                        name: result.name,
-                        caption: result.name.split('.')[0],
-                        deleteHash: result.deleteHash,
-                        isLocal: result.isLocal || false
-                    });
-                    successCount++;
-                } else {
-                    failCount++;
-                }
-
-                uploaded++;
-                progressFill.style.width = ((uploaded / totalFiles) * 100) + '%';
-            }
-
-            progressBar.classList.remove('active');
-            progressFill.style.width = '0%';
-
-            if (failCount > 0) {
-                uploadStatus.className = 'upload-status error show';
-                uploadStatus.textContent = `⚠️ ${successCount} نجحت، ${failCount} فشلت`;
-            } else {
-                uploadStatus.className = 'upload-status show';
-                uploadStatus.textContent = `✅ تم رفع ${successCount} صورة بنجاح!`;
-            }
-
-            setTimeout(() => uploadStatus.classList.remove('show'), 3000);
-
-            // حفظ في localStorage
-            saveImagesToStorage();
+        function addImage(src, name) {
+            const image = {
+                id: Date.now() + Math.random(),
+                src: src,
+                name: name,
+                caption: name.split('.')[0]
+            };
+            images.push(image);
             updateUI();
         }
 
-        async function removeImage(id) {
-            const image = images.find(img => img.id === id);
-
-            if (image && image.deleteHash) {
-                await deleteFromImgur(image.deleteHash);
-            }
-
+        function removeImage(id) {
             images = images.filter(img => img.id !== id);
             if (currentSlide >= images.length) currentSlide = Math.max(0, images.length - 1);
-
-            saveImagesToStorage();
             updateUI();
-        }
-
-        // ===== حفظ وتحميل الصور =====
-        function saveImagesToStorage() {
-            // نحفظ فقط الروابط والبيانات الأساسية
-            const imagesToSave = images.map(img => ({
-                id: img.id,
-                src: img.src,
-                name: img.name,
-                caption: img.caption,
-                deleteHash: img.deleteHash,
-                isLocal: img.isLocal
-            }));
-            localStorage.setItem('sliderImages', JSON.stringify(imagesToSave));
-        }
-
-        function loadImagesFromStorage() {
-            const saved = localStorage.getItem('sliderImages');
-            if (saved) {
-                try {
-                    images = JSON.parse(saved);
-                    updateUI();
-                } catch (e) {
-                    console.error('Error loading images:', e);
-                }
-            }
         }
 
         // ===== تحديث الواجهة =====
@@ -1221,9 +981,9 @@
                         <img src="${img.src}" alt="${img.name}">
                         <div class="info">
                             <div style="color: #fff; font-weight: bold;">${img.name}</div>
-                            <div style="color: #888; font-size: 10px;">${img.isLocal ? '💻 محلي' : '☁️ سحابي'}</div>
+                            <div style="color: #888;">${(img.src.length / 1024).toFixed(1)} KB</div>
                         </div>
-                        <button class="delete-btn" onclick="removeImage('${img.id}')">🗑️ حذف</button>
+                        <button class="delete-btn" onclick="removeImage(${img.id})">🗑️ حذف</button>
                     </div>
                 `).join('');
             }
@@ -1242,7 +1002,6 @@
                         <div>
                             <h2>📷 لا توجد صور</h2>
                             <p>افتح لوحة التحكم لإضافة صور جديدة</p>
-                            <p style="font-size: 12px; margin-top: 10px; color: #888;">الصور تُحفظ تلقائياً على السحابة</p>
                         </div>
                     </div>
                 `;
@@ -1276,8 +1035,14 @@
             if (images.length === 0) return;
             currentSlide = index;
             const track = document.getElementById('sliderTrack');
-            track.style.transform = `translateX(${index * 100}%)`;
-            track.style.transition = 'transform 0.5s cubic-bezier(0.4, 0, 0.2, 1)';
+
+            if (settings.transitionEffect) {
+                track.style.transform = `translateX(${index * 100}%)`;
+                track.style.transition = 'transform 0.5s cubic-bezier(0.4, 0, 0.2, 1)';
+            } else {
+                track.style.transform = `translateX(${index * 100}%)`;
+                track.style.transition = 'none';
+            }
 
             document.querySelectorAll('.dot').forEach((dot, i) => {
                 dot.classList.toggle('active', i === index);
@@ -1353,15 +1118,13 @@
             const diff = touchStartX - touchEndX;
 
             if (Math.abs(diff) > swipeThreshold) {
-                if (diff > 0) nextSlide();
-                else prevSlide();
+                if (diff > 0) {
+                    nextSlide();
+                } else {
+                    prevSlide();
+                }
             }
         }
-
-        // ===== تحميل الصور المحفوظة عند فتح الصفحة =====
-        window.addEventListener('load', () => {
-            loadImagesFromStorage();
-        });
     </script>
 </body>
 </html>
